@@ -1,51 +1,368 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Search, Shuffle, Sparkles, Wine, Users, Flame, ChevronDown, X, Clock3, UserRound, Lightbulb } from "lucide-react";
+import {
+  Search,
+  Shuffle,
+  Sparkles,
+  Wine,
+  Users,
+  Flame,
+  ChevronDown,
+  X,
+  Clock3,
+  UserRound,
+  Lightbulb,
+  Target,
+  Package,
+  ClipboardList,
+  ListChecks,
+  Flag,
+  ShieldAlert,
+} from "lucide-react";
 import { games } from "@/data/games";
 
 export const Route = createFileRoute("/")({ component: Index });
 const categories = ["Todos", "Fiesta", "Preguntas", "Cartas y dados", "Movimiento", "Música"];
 
-function gameMeta(id:number, category:string){
-  const people = category === "Preguntas" ? "3+ personas" : category === "Cartas y dados" ? "2+ personas" : category === "Movimiento" ? "4+ personas" : category === "Música" ? "3+ personas" : "3+ personas";
-  const duration = id % 5 === 0 ? "15–25 min" : id % 3 === 0 ? "10–20 min" : "10–15 min";
-  return { people, duration };
-}
-
 function Index() {
-  const [query,setQuery]=useState("");
-  const [category,setCategory]=useState("Todos");
-  const [selected,setSelected]=useState<(typeof games)[number] | null>(null);
-  const filtered=useMemo(()=>games.filter(game=>{const q=query.trim().toLowerCase();return (category==="Todos"||game.category===category)&&(!q||game.title.toLowerCase().includes(q)||game.text.toLowerCase().includes(q));}),[query,category]);
-  const surpriseMe=()=>{const pool=filtered.length?filtered:games;setSelected(pool[Math.floor(Math.random()*pool.length)]);};
-  const scrollToGames=()=>document.getElementById("juegos")?.scrollIntoView({behavior:"smooth"});
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState("Todos");
+  const [selected, setSelected] = useState<(typeof games)[number] | null>(null);
+  const filtered = useMemo(
+    () =>
+      games.filter((game) => {
+        const q = query.trim().toLowerCase();
+        return (
+          (category === "Todos" || game.category === category) &&
+          (!q || game.title.toLowerCase().includes(q) || game.text.toLowerCase().includes(q))
+        );
+      }),
+    [query, category],
+  );
+  const surpriseMe = () => {
+    const pool = filtered.length ? filtered : games;
+    setSelected(pool[Math.floor(Math.random() * pool.length)]);
+  };
+  const scrollToGames = () =>
+    document.getElementById("juegos")?.scrollIntoView({ behavior: "smooth" });
 
-  return <main className="min-h-screen bg-[#0c0710] text-white">
-    <style>{`@import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800&display=swap');:root{font-family:'Montserrat',sans-serif}.display{font-family:'Anton',sans-serif;letter-spacing:.02em}.noise{background-image:radial-gradient(circle at 20% 10%,rgba(255,70,70,.14),transparent 24%),radial-gradient(circle at 80% 0%,rgba(255,196,0,.08),transparent 24%),linear-gradient(180deg,#150812 0%,#0b0710 54%,#08070a 100%)}.glass{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.11)}`}</style>
+  return (
+    <main className="min-h-screen bg-[#0c0710] text-white">
+      <style>{`@import url('https://fonts.googleapis.com/css2?family=Anton&family=Montserrat:wght@400;500;600;700;800&display=swap');:root{font-family:'Montserrat',sans-serif}.display{font-family:'Anton',sans-serif;letter-spacing:.02em}.noise{background-image:radial-gradient(circle at 20% 10%,rgba(255,70,70,.14),transparent 24%),radial-gradient(circle at 80% 0%,rgba(255,196,0,.08),transparent 24%),linear-gradient(180deg,#150812 0%,#0b0710 54%,#08070a 100%)}.glass{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.035));backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.11)}`}</style>
 
-    <section className="noise relative min-h-[88vh] overflow-hidden border-b border-white/10">
-      <div className="absolute -left-20 top-12 h-72 w-72 rounded-full bg-[#d92332]/20 blur-3xl"/><div className="absolute -right-20 top-0 h-80 w-80 rounded-full bg-[#ff7a00]/10 blur-3xl"/>
-      <div className="mx-auto flex min-h-[88vh] max-w-7xl flex-col px-5 pb-10 pt-7 sm:px-8 lg:px-10">
-        <header className="flex items-center justify-between"><div className="flex items-center gap-3"><div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#d92332] shadow-[0_0_40px_rgba(217,35,50,.35)]"><Wine size={22}/></div><div><p className="display text-2xl leading-none">50 DRINKING GAMES</p><p className="mt-1 text-[10px] font-bold uppercase tracking-[.24em] text-white/45">Edición Fiesta · Español LATAM</p></div></div><button onClick={surpriseMe} className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold hover:bg-white/10 sm:flex"><Shuffle size={16}/> Juego al azar</button></header>
-        <div className="flex flex-1 items-center py-12 lg:py-16"><div className="max-w-4xl"><div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ffbd59]/25 bg-[#ffbd59]/10 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[.18em] text-[#ffd083]"><Sparkles size={14}/> Tu fiesta empieza aquí</div><h1 className="display text-6xl leading-[.9] sm:text-7xl lg:text-[104px]">50 JUEGOS.<br/><span className="text-[#e52b3a]">DIVERSIÓN INFINITA.</span></h1><p className="mt-6 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">Elige entre 50 juegos para romper el hielo, reír, competir y darle otra energía a tu fiesta. No necesitas empezar con ningún juego: tú decides cuál va primero.</p><button onClick={scrollToGames} className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-[#e52b3a] px-7 py-4 text-sm font-black uppercase tracking-wider shadow-[0_12px_30px_rgba(229,43,58,.25)] hover:bg-[#f13a49]">Desliza y elige tu juego <ChevronDown size={20}/></button><div className="mt-7 flex flex-wrap gap-3 text-sm font-bold text-white/75"><span className="rounded-full bg-white/7 px-4 py-2">🥂 Fiesta</span><span className="rounded-full bg-white/7 px-4 py-2">💬 Preguntas</span><span className="rounded-full bg-white/7 px-4 py-2">🃏 Cartas y dados</span><span className="rounded-full bg-white/7 px-4 py-2">🏃 Retos</span></div></div></div>
-        <button onClick={scrollToGames} className="mx-auto flex flex-col items-center gap-1 text-xs font-extrabold uppercase tracking-[.18em] text-white/40 hover:text-white/70"><span>Los juegos están aquí abajo</span><ChevronDown className="animate-bounce" size={22}/></button>
-      </div>
-    </section>
+      <section className="noise relative min-h-[88vh] overflow-hidden border-b border-white/10">
+        <div className="absolute -left-20 top-12 h-72 w-72 rounded-full bg-[#d92332]/20 blur-3xl" />
+        <div className="absolute -right-20 top-0 h-80 w-80 rounded-full bg-[#ff7a00]/10 blur-3xl" />
+        <div className="mx-auto flex min-h-[88vh] max-w-7xl flex-col px-5 pb-10 pt-7 sm:px-8 lg:px-10">
+          <header className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="grid h-11 w-11 place-items-center rounded-2xl bg-[#d92332] shadow-[0_0_40px_rgba(217,35,50,.35)]">
+                <Wine size={22} />
+              </div>
+              <div>
+                <p className="display text-2xl leading-none">50 DRINKING GAMES</p>
+                <p className="mt-1 text-[10px] font-bold uppercase tracking-[.24em] text-white/45">
+                  Edición Fiesta · Español LATAM
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={surpriseMe}
+              className="hidden items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-bold hover:bg-white/10 sm:flex"
+            >
+              <Shuffle size={16} /> Juego al azar
+            </button>
+          </header>
+          <div className="flex flex-1 items-center py-12 lg:py-16">
+            <div className="max-w-4xl">
+              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ffbd59]/25 bg-[#ffbd59]/10 px-3 py-1.5 text-xs font-extrabold uppercase tracking-[.18em] text-[#ffd083]">
+                <Sparkles size={14} /> Tu fiesta empieza aquí
+              </div>
+              <h1 className="display text-6xl leading-[.9] sm:text-7xl lg:text-[104px]">
+                50 JUEGOS.
+                <br />
+                <span className="text-[#e52b3a]">DIVERSIÓN INFINITA.</span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-base leading-7 text-white/65 sm:text-lg">
+                Elige entre 50 juegos para romper el hielo, reír, competir y darle otra energía a tu
+                fiesta. No necesitas empezar con ningún juego: tú decides cuál va primero.
+              </p>
+              <button
+                onClick={scrollToGames}
+                className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-[#e52b3a] px-7 py-4 text-sm font-black uppercase tracking-wider shadow-[0_12px_30px_rgba(229,43,58,.25)] hover:bg-[#f13a49]"
+              >
+                Desliza y elige tu juego <ChevronDown size={20} />
+              </button>
+              <div className="mt-7 flex flex-wrap gap-3 text-sm font-bold text-white/75">
+                <span className="rounded-full bg-white/7 px-4 py-2">🥂 Fiesta</span>
+                <span className="rounded-full bg-white/7 px-4 py-2">💬 Preguntas</span>
+                <span className="rounded-full bg-white/7 px-4 py-2">🃏 Cartas y dados</span>
+                <span className="rounded-full bg-white/7 px-4 py-2">🏃 Retos</span>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={scrollToGames}
+            className="mx-auto flex flex-col items-center gap-1 text-xs font-extrabold uppercase tracking-[.18em] text-white/40 hover:text-white/70"
+          >
+            <span>Los juegos están aquí abajo</span>
+            <ChevronDown className="animate-bounce" size={22} />
+          </button>
+        </div>
+      </section>
 
-    <section id="juegos" className="mx-auto max-w-7xl scroll-mt-4 px-5 py-10 sm:px-8 lg:px-10 lg:py-14">
-      <div className="mb-8"><p className="text-sm font-bold text-[#ffbd59]">50 opciones · tú eliges el ritmo</p><h2 className="display mt-1 text-5xl sm:text-6xl">ELIGE TU JUEGO</h2><p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">Toca cualquier tarjeta para ver las reglas, el mínimo de jugadores, la duración aproximada y consejos para jugar.</p></div>
-      <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center"><div className="relative"><Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/35" size={19}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Buscar un juego..." className="w-full rounded-2xl border border-white/10 bg-white/5 py-4 pl-12 pr-4 outline-none placeholder:text-white/30 focus:border-[#e52b3a]/70"/></div><button onClick={surpriseMe} className="flex items-center justify-center gap-2 rounded-2xl bg-[#ffbd59] px-6 py-4 font-black text-[#25130c]"><Shuffle size={18}/> Sorpréndeme</button></div>
-      <div className="mt-5 flex gap-2 overflow-x-auto pb-2">{categories.map(c=><button key={c} onClick={()=>setCategory(c)} className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-extrabold ${category===c?"bg-[#e52b3a] text-white":"bg-white/6 text-white/55 hover:bg-white/10"}`}>{c}</button>)}</div>
-      <div className="mt-8 flex justify-end"><p className="rounded-full bg-white/6 px-4 py-2 text-sm font-bold text-white/45">{filtered.length} juegos</p></div>
-      <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">{filtered.map(game=>{const meta=gameMeta(game.id,game.category);return <button key={game.id} onClick={()=>setSelected(game)} className="group glass min-h-[245px] rounded-[26px] p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-[#e52b3a]/55 hover:bg-white/[.075]"><div className="flex items-start justify-between"><span className="text-4xl transition group-hover:scale-110">{game.emoji}</span><span className="rounded-full bg-white/7 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white/38">#{String(game.id).padStart(2,"0")}</span></div><p className="mt-6 text-[10px] font-black uppercase tracking-[.2em] text-[#ffbd59]">{game.category}</p><h3 className="display mt-2 text-2xl leading-tight">{game.title}</h3><p className="mt-3 line-clamp-2 text-xs leading-5 text-white/42">{game.text}</p><div className="mt-4 flex gap-3 text-[10px] font-bold text-white/40"><span>👥 {meta.people}</span><span>⏱ {meta.duration}</span></div></button>})}</div>
-    </section>
+      <section
+        id="juegos"
+        className="mx-auto max-w-7xl scroll-mt-4 px-5 py-10 sm:px-8 lg:px-10 lg:py-14"
+      >
+        <div className="mb-8">
+          <p className="text-sm font-bold text-[#ffbd59]">50 opciones · tú eliges el ritmo</p>
+          <h2 className="display mt-1 text-5xl sm:text-6xl">ELIGE TU JUEGO</h2>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/50">
+            Toca cualquier tarjeta para ver las reglas, el mínimo de jugadores, la duración
+            aproximada y consejos para jugar.
+          </p>
+        </div>
+        <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/35" size={19} />
+            <input
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Buscar un juego..."
+              className="w-full rounded-2xl border border-white/10 bg-white/5 py-4 pl-12 pr-4 outline-none placeholder:text-white/30 focus:border-[#e52b3a]/70"
+            />
+          </div>
+          <button
+            onClick={surpriseMe}
+            className="flex items-center justify-center gap-2 rounded-2xl bg-[#ffbd59] px-6 py-4 font-black text-[#25130c]"
+          >
+            <Shuffle size={18} /> Sorpréndeme
+          </button>
+        </div>
+        <div className="mt-5 flex gap-2 overflow-x-auto pb-2">
+          {categories.map((c) => (
+            <button
+              key={c}
+              onClick={() => setCategory(c)}
+              className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-extrabold ${category === c ? "bg-[#e52b3a] text-white" : "bg-white/6 text-white/55 hover:bg-white/10"}`}
+            >
+              {c}
+            </button>
+          ))}
+        </div>
+        <div className="mt-8 flex justify-end">
+          <p className="rounded-full bg-white/6 px-4 py-2 text-sm font-bold text-white/45">
+            {filtered.length} juegos
+          </p>
+        </div>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filtered.map((game) => (
+            <button
+              key={game.id}
+              onClick={() => setSelected(game)}
+              className="group glass min-h-[245px] rounded-[26px] p-5 text-left transition duration-300 hover:-translate-y-1 hover:border-[#e52b3a]/55 hover:bg-white/[.075]"
+            >
+              <div className="flex items-start justify-between">
+                <span className="text-4xl transition group-hover:scale-110">{game.emoji}</span>
+                <span className="rounded-full bg-white/7 px-2.5 py-1 text-[10px] font-black uppercase tracking-widest text-white/38">
+                  #{String(game.id).padStart(2, "0")}
+                </span>
+              </div>
+              <p className="mt-6 text-[10px] font-black uppercase tracking-[.2em] text-[#ffbd59]">
+                {game.category}
+              </p>
+              <h3 className="display mt-2 text-2xl leading-tight">{game.title}</h3>
+              <p className="mt-3 line-clamp-2 text-xs leading-5 text-white/42">{game.text}</p>
+              <div className="mt-4 flex gap-3 text-[10px] font-bold text-white/40">
+                <span>👥 {game.players}</span>
+                <span>⏱ {game.duration}</span>
+              </div>
+            </button>
+          ))}
+        </div>
+      </section>
 
-    <section className="border-t border-white/10 bg-[#120b11]"><div className="mx-auto grid max-w-7xl gap-6 px-5 py-10 sm:px-8 md:grid-cols-3 lg:px-10"><Feature icon={<Users/>} title="Hecho para grupos" text="Perfecto para reuniones, previas, cumpleaños y noches con amigos."/><Feature icon={<Flame/>} title="50 dinámicas distintas" text="Cambia de estilo cuando quieras: preguntas, memoria, cartas, música o movimiento."/><Feature icon={<Wine/>} title="Solo para adultos" text="Contenido pensado para mayores de edad. Jueguen con responsabilidad."/></div></section>
+      <section className="border-t border-white/10 bg-[#120b11]">
+        <div className="mx-auto grid max-w-7xl gap-6 px-5 py-10 sm:px-8 md:grid-cols-3 lg:px-10">
+          <Feature
+            icon={<Users />}
+            title="Hecho para grupos"
+            text="Perfecto para reuniones, previas, cumpleaños y noches con amigos."
+          />
+          <Feature
+            icon={<Flame />}
+            title="50 dinámicas distintas"
+            text="Cambia de estilo cuando quieras: preguntas, memoria, cartas, música o movimiento."
+          />
+          <Feature
+            icon={<Wine />}
+            title="Solo para adultos"
+            text="Contenido pensado para mayores de edad. Jueguen con responsabilidad."
+          />
+        </div>
+      </section>
 
-    {selected&&<GameModal game={selected} close={()=>setSelected(null)} next={()=>{const pool=games.filter(g=>g.id!==selected.id);setSelected(pool[Math.floor(Math.random()*pool.length)])}}/>}
-  </main>;
+      {selected ? (
+        <GameModal
+          game={selected}
+          close={() => setSelected(null)}
+          next={() => {
+            const pool = games.filter((g) => g.id !== selected.id);
+            setSelected(pool[Math.floor(Math.random() * pool.length)]);
+          }}
+        />
+      ) : null}
+    </main>
+  );
 }
 
-function GameModal({game,close,next}:{game:(typeof games)[number];close:()=>void;next:()=>void}){const meta=gameMeta(game.id,game.category);return <div className="fixed inset-0 z-50 flex items-end bg-black/75 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6" onClick={close}><div onClick={e=>e.stopPropagation()} className="max-h-[92vh] w-full overflow-y-auto rounded-t-[32px] border border-white/10 bg-[#171017] p-6 shadow-2xl sm:max-w-3xl sm:rounded-[32px] sm:p-8"><div className="flex items-start justify-between gap-4"><div><div className="text-5xl">{game.emoji}</div><p className="mt-5 text-xs font-black uppercase tracking-[.2em] text-[#ffbd59]">{game.category} · Juego #{String(game.id).padStart(2,"0")}</p><h2 className="display mt-2 text-4xl sm:text-5xl">{game.title}</h2></div><button onClick={close} className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/7 text-white/60 hover:bg-white/12"><X size={19}/></button></div><div className="mt-6 grid grid-cols-2 gap-3"><Info icon={<UserRound size={18}/>} label="Jugadores" value={meta.people}/><Info icon={<Clock3 size={18}/>} label="Duración" value={meta.duration}/></div><div className="mt-5 rounded-3xl bg-white/[.055] p-5 sm:p-6"><p className="text-xs font-black uppercase tracking-[.2em] text-white/35">Cómo se juega</p><p className="mt-4 whitespace-pre-line text-[15px] leading-8 text-white/76">{game.text}</p></div><div className="mt-4 rounded-3xl border border-[#ffbd59]/15 bg-[#ffbd59]/[.06] p-5"><div className="flex items-center gap-2 text-[#ffcf79]"><Lightbulb size={18}/><p className="text-xs font-black uppercase tracking-[.18em]">Consejo para la partida</p></div><p className="mt-3 text-sm leading-6 text-white/60">Antes de empezar, lean las reglas en voz alta y acuerden el ritmo y las penalizaciones. Pueden sustituir cualquier trago por una bebida sin alcohol: lo importante es jugar y divertirse.</p></div><div className="mt-4 rounded-2xl border border-[#e52b3a]/20 bg-[#e52b3a]/8 p-4 text-xs leading-5 text-white/55">🔞 Solo para mayores de edad. Si deciden beber, háganlo con moderación. Nadie debe sentirse obligado a consumir alcohol para participar.</div><button onClick={next} className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#e52b3a] px-5 py-4 font-black"><Shuffle size={18}/> Elegir otro juego</button></div></div>}
-function Info({icon,label,value}:{icon:React.ReactNode;label:string;value:string}){return <div className="flex items-center gap-3 rounded-2xl bg-white/[.055] p-4"><div className="text-[#ffbd59]">{icon}</div><div><p className="text-[10px] font-bold uppercase tracking-wider text-white/35">{label}</p><p className="mt-1 text-sm font-extrabold">{value}</p></div></div>}
-function Feature({icon,title,text}:{icon:React.ReactNode;title:string;text:string}){return <div className="flex gap-4 rounded-2xl bg-white/[.035] p-5"><div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#e52b3a]/15 text-[#f0525f]">{icon}</div><div><h4 className="font-extrabold">{title}</h4><p className="mt-1 text-sm leading-6 text-white/45">{text}</p></div></div>}
+function GameModal({
+  game,
+  close,
+  next,
+}: {
+  game: (typeof games)[number];
+  close: () => void;
+  next: () => void;
+}) {
+  return (
+    <div
+      className="fixed inset-0 z-50 flex items-end bg-black/75 backdrop-blur-sm sm:items-center sm:justify-center sm:p-6"
+      onClick={close}
+    >
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="game-modal-title"
+        onClick={(e) => e.stopPropagation()}
+        className="max-h-[94vh] w-full overflow-y-auto rounded-t-[32px] border border-white/10 bg-[#171017] p-5 shadow-2xl sm:max-w-3xl sm:rounded-[32px] sm:p-8"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <div>
+            <div className="text-5xl">{game.emoji}</div>
+            <p className="mt-4 text-xs font-black uppercase tracking-[.2em] text-[#ffbd59]">
+              {game.category} · Juego #{String(game.id).padStart(2, "0")}
+            </p>
+            <h2 id="game-modal-title" className="display mt-2 text-4xl leading-tight sm:text-5xl">
+              {game.title}
+            </h2>
+          </div>
+          <button
+            onClick={close}
+            aria-label="Cerrar"
+            className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-white/7 text-white/60 hover:bg-white/12"
+          >
+            <X size={19} />
+          </button>
+        </div>
+
+        <div className="mt-6 grid grid-cols-2 gap-3">
+          <Info icon={<UserRound size={18} />} label="Jugadores" value={game.players} />
+          <Info icon={<Clock3 size={18} />} label="Duración" value={game.duration} />
+        </div>
+
+        <section className="mt-4 rounded-3xl border border-[#e52b3a]/15 bg-[#e52b3a]/[.07] p-5">
+          <div className="flex items-center gap-2 text-[#f56a75]">
+            <Target size={18} />
+            <SectionTitle>Objetivo</SectionTitle>
+          </div>
+          <p className="mt-3 text-sm leading-6 text-white/70">{game.objective}</p>
+        </section>
+
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <DetailBlock icon={<Package size={17} />} title="Materiales" text={game.materials} />
+          <DetailBlock
+            icon={<ClipboardList size={17} />}
+            title="Preparación"
+            text={game.preparation}
+          />
+        </div>
+
+        <div className="mt-4 space-y-4">
+          <DetailBlock icon={<Sparkles size={17} />} title="Cómo jugar" text={game.howToPlay} />
+          <DetailBlock icon={<ListChecks size={17} />} title="Reglas" text={game.rules} />
+          <DetailBlock icon={<Flag size={17} />} title="Cómo termina" text={game.ending} />
+        </div>
+
+        <section className="mt-4 rounded-3xl border border-[#ffbd59]/15 bg-[#ffbd59]/[.06] p-5">
+          <div className="flex items-center gap-2 text-[#ffcf79]">
+            <Lightbulb size={18} />
+            <SectionTitle>Consejo</SectionTitle>
+          </div>
+          <p className="mt-3 text-sm leading-6 text-white/65">{game.tip}</p>
+        </section>
+
+        {game.safetyNote ? (
+          <section className="mt-4 rounded-3xl border border-orange-400/20 bg-orange-400/[.07] p-5">
+            <div className="flex items-center gap-2 text-orange-300">
+              <ShieldAlert size={18} />
+              <SectionTitle>Nota de seguridad</SectionTitle>
+            </div>
+            <p className="mt-3 text-sm leading-6 text-white/65">{game.safetyNote}</p>
+          </section>
+        ) : null}
+
+        <div className="mt-4 rounded-2xl border border-[#e52b3a]/20 bg-[#e52b3a]/8 p-4 text-xs leading-5 text-white/55">
+          🔞 Solo para mayores de edad. Si deciden beber, háganlo con moderación. Nadie debe
+          sentirse obligado a consumir alcohol para participar.
+        </div>
+        <button
+          onClick={next}
+          className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-[#e52b3a] px-5 py-4 font-black"
+        >
+          <Shuffle size={18} /> Elegir otro juego
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function SectionTitle({ children }: { children: React.ReactNode }) {
+  return <h3 className="text-xs font-black uppercase tracking-[.18em]">{children}</h3>;
+}
+
+function DetailBlock({
+  icon,
+  title,
+  text,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  text: string;
+}) {
+  return (
+    <section className="rounded-3xl bg-white/[.055] p-5">
+      <div className="flex items-center gap-2 text-[#ffbd59]">
+        {icon}
+        <SectionTitle>{title}</SectionTitle>
+      </div>
+      <p className="mt-3 text-sm leading-6 text-white/65">{text}</p>
+    </section>
+  );
+}
+
+function Info({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div className="flex items-center gap-3 rounded-2xl bg-white/[.055] p-4">
+      <div className="text-[#ffbd59]">{icon}</div>
+      <div>
+        <p className="text-[10px] font-bold uppercase tracking-wider text-white/35">{label}</p>
+        <p className="mt-1 text-sm font-extrabold">{value}</p>
+      </div>
+    </div>
+  );
+}
+function Feature({ icon, title, text }: { icon: React.ReactNode; title: string; text: string }) {
+  return (
+    <div className="flex gap-4 rounded-2xl bg-white/[.035] p-5">
+      <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#e52b3a]/15 text-[#f0525f]">
+        {icon}
+      </div>
+      <div>
+        <h4 className="font-extrabold">{title}</h4>
+        <p className="mt-1 text-sm leading-6 text-white/45">{text}</p>
+      </div>
+    </div>
+  );
+}
